@@ -2,8 +2,8 @@ from datetime import datetime
 import scrapy
 
 
-class IMDBUser(scrapy.Spider):
-    name = "imdb"
+class IMDBUserRatings(scrapy.Spider):
+    name = "ratings"
 
     def start_requests(self):
         userid = self.settings.get("userid", "ur9028759")
@@ -16,9 +16,19 @@ class IMDBUser(scrapy.Spider):
 
     def parse(self, response):
         for movie in response.css("div.lister-item-content"):
-            imdb_id = movie.css('div.wtw-option-standalone::attr(data-tconst)').get()
-            rating = movie.css("div.ipl-rating-star--other-user span.ipl-rating-star__rating::text").get().strip()
-            time = movie.xpath("./*[starts-with(text(), 'Rated on ')]/text()").get().strip()[9:]
+            imdb_id = movie.css("div.wtw-option-standalone::attr(data-tconst)").get()
+            rating = (
+                movie.css(
+                    "div.ipl-rating-star--other-user span.ipl-rating-star__rating::text"
+                )
+                .get()
+                .strip()
+            )
+            time = (
+                movie.xpath("./*[starts-with(text(), 'Rated on ')]/text()")
+                .get()
+                .strip()[9:]
+            )
             time = datetime.strptime(time, "%d %b %Y").strftime("%Y-%m-%d")
             yield {"id": imdb_id, "date": time, "rating": rating}
 
