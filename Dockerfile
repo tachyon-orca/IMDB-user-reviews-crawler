@@ -1,5 +1,6 @@
 FROM python:slim
-RUN pip install scrapy
+RUN pip install playwright fire
+RUN playwright install --with-deps
 WORKDIR /app
-COPY . /app
-ENTRYPOINT ["scrapy", "crawl"]
+COPY *.py /app
+ENTRYPOINT ["python"]
