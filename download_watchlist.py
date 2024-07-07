@@ -25,7 +25,7 @@ def download_watchlist(playwright: Playwright, user_id: str) -> None:
                 locator.click()
                 break
         except TimeoutError:
-            page.reload()
+            page.reload(timeout=90000)
     download = download_info.value
     download.save_as("watchlist.csv")
 
