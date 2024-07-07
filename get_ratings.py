@@ -23,12 +23,15 @@ def intercept_response(response):
 
 
 def get_ratings(playwright: Playwright, user_id: str) -> None:
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
+    browser = playwright.chromium.launch(headless=True)
+    context = browser.new_context(
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    )
     page = context.new_page()
     page.on("response", intercept_response)
     try:
         page.goto(f"https://www.imdb.com/user/{user_id}/ratings")
+        page.wait_for_load_state("networkidle")
     except TimeoutError:
         pass
 
@@ -53,7 +56,7 @@ def main(output: str, user_id: str = "ur9028759"):
         extracted_ratings.append(
             {
                 "id": title["id"],
-                "rating": rating["value"],
+                "rating": str(rating["value"]),
                 "date": re.findall(r"\d{4}-\d{2}-\d{2}", rating["date"])[0],
             }
         )
