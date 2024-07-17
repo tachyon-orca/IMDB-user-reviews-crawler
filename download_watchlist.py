@@ -13,8 +13,8 @@ def download_watchlist(playwright: Playwright, user_id: str) -> None:
     )
     page = context.new_page()
     page.goto(f"https://www.imdb.com/user/{user_id}/watchlist")
-    page.get_by_label("Export").click(timeout=60000)
-    page.goto("https://www.imdb.com/exports/")
+    page.get_by_label("Export").click(timeout=90000)
+    page.goto("https://www.imdb.com/exports/", timeout=90000)
     while True:
         try:
             with page.expect_download() as download_info:
