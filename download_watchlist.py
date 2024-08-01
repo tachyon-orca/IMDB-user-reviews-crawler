@@ -12,7 +12,7 @@ def download_watchlist(playwright: Playwright, user_id: str) -> None:
         user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
     )
     page = context.new_page()
-    page.goto(f"https://www.imdb.com/user/{user_id}/watchlist", timeout=90000)
+    page.goto(f"https://www.imdb.com/user/{user_id}/watchlist", timeout=300000)
     page.get_by_label("Export").click(timeout=90000)
     page.goto("https://www.imdb.com/exports/", timeout=90000)
     while True:
