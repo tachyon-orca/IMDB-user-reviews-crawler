@@ -23,7 +23,10 @@ def get_ratings(playwright: Playwright, user_id: str) -> None:
         films = page.locator("li.ipc-metadata-list-summary-item")
         for i in range(films.count()):
             item = films.nth(i)
-            link = item.locator("a.ipc-title-link-wrapper").get_attribute("href")
+            link = item.locator("a.ipc-title-link-wrapper")
+            if link.count() > 1:
+                continue
+            link = link.get_attribute("href")
             imdb_id = re.findall(r"tt\d+", link)[0]
             rating = (
                 item.get_by_test_id("ratingGroup--other-user-rating")
