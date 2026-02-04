@@ -9,12 +9,12 @@ from playwright.sync_api import Playwright, TimeoutError, sync_playwright
 def download_watchlist(playwright: Playwright, user_id: str) -> None:
     browser = playwright.chromium.launch(headless=True)
     context = browser.new_context(
-        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
     )
     page = context.new_page()
     page.goto(f"https://www.imdb.com/user/{user_id}/watchlist", timeout=300000)
     page.get_by_role("button", name="Export").click(timeout=90000)
-    page.goto("https://www.imdb.com/exports/", timeout=90000)
+    page.get_by_role("link", name="Open exports page").click(timeout=5000)
     while True:
         try:
             with page.expect_download() as download_info:
